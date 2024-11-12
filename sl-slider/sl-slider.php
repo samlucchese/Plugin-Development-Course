@@ -39,6 +39,9 @@ if ( !class_exists( 'SL_Slider' ) ) {
 	class SL_Slider{
 		function __construct(){
 			$this->define_constants();
+			
+			require_once( SL_SLIDER_PATH . 'post-types/class.sl-slider-cpt.php');
+			$SL_Slider_Post_Type = new SL_Slider_Post_Type();
 		}
 		
 		// Here we define constants like URL paths that we will use frequently during the build.
@@ -59,6 +62,7 @@ if ( !class_exists( 'SL_Slider' ) ) {
 		
 		public static function deactivate() {
 			flush_rewrite_rules();
+			unregister_post_type( 'sl-slider' );
 		}
 		
 		public static function uninstall() {
