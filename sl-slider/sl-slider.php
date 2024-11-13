@@ -43,8 +43,13 @@ if ( !class_exists( 'SL_Slider' ) ) {
 			// Add an admin menu for plugin. Method down below. 
 			add_action( 'admin_menu', array( $this, 'add_menu') );
 			
+			// require custom post type file + instantiate the class object
 			require_once( SL_SLIDER_PATH . 'post-types/class.sl-slider-cpt.php');
 			$SL_Slider_Post_Type = new SL_Slider_Post_Type();
+			
+			// require custom settings page file + instantiate the class object
+			require_once( SL_SLIDER_PATH . 'class.sl-slider-settings.php');
+			$SL_Slider_Settings = new SL_Slider_Settings();
 		}
 		
 		// Here we define constants like URL paths that we will use frequently during the build.
@@ -105,8 +110,11 @@ if ( !class_exists( 'SL_Slider' ) ) {
 				null
 			);
 		} 
-		public function sl_slider_settings_page(){
-			echo "This is a test options page"; //method for sdd_menu() callback above
+		
+		//method for add_menu() callback above 
+		public function sl_slider_settings_page(){ 
+			//create a file inside the views folder for our settings.
+			require( SL_SLIDER_PATH . 'views/settings-page.php' );	
 		}
 		
 	}
