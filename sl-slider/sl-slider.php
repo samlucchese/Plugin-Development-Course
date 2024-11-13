@@ -40,6 +40,9 @@ if ( !class_exists( 'SL_Slider' ) ) {
 		function __construct(){
 			$this->define_constants();
 			
+			// Add an admin menu for plugin. Method down below. 
+			add_action( 'admin_menu', array( $this, 'add_menu') );
+			
 			require_once( SL_SLIDER_PATH . 'post-types/class.sl-slider-cpt.php');
 			$SL_Slider_Post_Type = new SL_Slider_Post_Type();
 		}
@@ -67,6 +70,43 @@ if ( !class_exists( 'SL_Slider' ) ) {
 		
 		public static function uninstall() {
 			
+		}
+		
+		
+		// Method to add an admin menu for plugin. add_action() called above.
+		public function add_menu(){
+			
+			add_menu_page( //adds the menu page to the sidebar
+				'SL Slider Options', //menu page title
+				'SL Slider', //menu title
+				'manage_options', //type of capability the WP user needs to access this page
+				'sl_slider_admin',
+				array($this, 'sl_slider_settings_page'), //Method defined below
+				'dashicons-images-alt2'
+			);
+			
+			add_submenu_page( //adds the submenu pages to the sidebar inside the menu item.
+				'sl_slider_admin',
+				'Manage Slides',
+				'Manage Slides',
+				'manage_options',
+				'edit.php?post_type=sl-slider',
+				null,
+				null
+			);
+			
+			add_submenu_page( //adds the submenu pages to the sidebar inside the menu item.
+				'sl_slider_admin',
+				'Add New Slide',
+				'Add New Slide',
+				'manage_options',
+				'post-new.php?post_type=sl-slider',
+				null,
+				null
+			);
+		} 
+		public function sl_slider_settings_page(){
+			echo "This is a test options page"; //method for sdd_menu() callback above
 		}
 		
 	}
