@@ -114,6 +114,15 @@ if ( !class_exists( 'SL_Slider' ) ) {
 		//method for add_menu() callback above 
 		public function sl_slider_settings_page(){ 
 			//create a file inside the views folder for our settings.
+			// --- check if the user has capability to access the page 
+			if (! current_user_can( 'manage_options' ) ){ // <---- if the user can't manage the options, return.
+				return;
+			}
+			//trigger to show 'settings saved' validation message 
+			if ( isset( $_GET['settings-updated'] ) ){
+				add_settings_error('sl_slider_options', 'sl_slider_message', 'Settings Saved Successfully', 'success' );
+			}
+			settings_errors('sl_slider_options');
 			require( SL_SLIDER_PATH . 'views/settings-page.php' );	
 		}
 		

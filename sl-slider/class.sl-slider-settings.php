@@ -146,6 +146,7 @@ if ( ! class_exists( 'SL_Slider_Settings' ) ) {
 				switch($key){
 					case 'sl_slider_title':
 						if( empty( $value)){
+							add_settings_error('sl_slider_options', 'sl_slider_message', 'The title field cannot be left empty', 'error');
 							$value = 'Please type some text';
 						}
 						$new_input[$key] = sanitize_text_field( $value );
