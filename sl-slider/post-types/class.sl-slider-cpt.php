@@ -1,4 +1,6 @@
 <?php 
+
+// Always start new classes by checking if the class exists first, prevents breaks.
 if ( !class_exists( 'SL_Slider_Post_Type' ) ){
 	class SL_Slider_Post_Type{
 		function __construct(){

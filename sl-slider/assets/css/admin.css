@@ -1,0 +1,10 @@
+/* This is the file that styles admin elements. For example, metabox text color, size, padding, etc.  */
+.sl-slider-metabox label{
+	color: #f00;
+}
+.sl-slider-metabox td{
+	padding: 5px;
+}
+.sl-slider-metabox th{
+	padding: 10px 10px 5px 0;
+}

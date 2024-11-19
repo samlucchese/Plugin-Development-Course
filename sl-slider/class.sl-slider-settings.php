@@ -10,6 +10,7 @@ if ( ! class_exists( 'SL_Slider_Settings' ) ) {
 		public function __construct() {
 			
 			// The below line is looking for a value called 'sl_slider_options' in the DB table (adminerEvo, phpmyadmin). Creates a variable ($options) that contains an array with all the values submitted by our form. (sl_slider_options)
+			// --- See this below line in action to call the SLIDER TITLE in sl-slider_shortcode.php
 			self::$options = get_option( 'sl_slider_options' );
 			
 			add_action( 'admin_init', array( $this, 'admin_init') ); // method below 
@@ -141,7 +142,7 @@ if ( ! class_exists( 'SL_Slider_Settings' ) ) {
 		}
 		
 		public function sl_slider_validate( $input ){
-			$new_input = array();
+			$new_input = get_option('sl_slider_options');
 			foreach( $input as $key => $value ) {
 				switch($key){
 					case 'sl_slider_title':
