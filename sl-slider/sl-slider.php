@@ -10,7 +10,7 @@
 * Author URI: https://authorsitename.com
 * License: GPL v2 or later
 * License URI: https://www.gnu.org/licenses/gpl-2.0.html
-* Test Domain: sl-slider
+* Text Domain: sl-slider
 * Domain Path: /languages
 */
 
@@ -39,6 +39,10 @@ if ( !class_exists( 'SL_Slider' ) ) {
 	class SL_Slider{
 		function __construct(){
 			$this->define_constants();
+			
+			//translation support, function defined below.
+			$this->load_textdomain();
+			
 			
 			// require once Functions.php file for script localization 
 			require_once( SL_SLIDER_PATH . 'functions/functions.php' );
@@ -93,13 +97,22 @@ if ( !class_exists( 'SL_Slider' ) ) {
 			
 		}
 		
+		// Function to add Translation support to plugin. Call it above in __construct(){
+		public function load_textdomain(){
+			load_plugin_textdomain(
+				'sl-slider', //text domain, found at top of file commented out
+				false,
+				dirname( plugin_basename(__FILE__) ) . '/languages/'
+			);
+		}
+		
 		
 		// Method to add an admin menu for plugin. add_action() called above.
 		public function add_menu(){
 			
 			add_menu_page( //adds the menu page to the sidebar
-				'SL Slider Options', //menu page title
-				'SL Slider', //menu title
+				esc_html__( 'SL Slider Options', 'sl-slider'), //menu page title
+				esc_html__( 'SL Slider', 'sl-slider'), //menu title
 				'manage_options', //type of capability the WP user needs to access this page
 				'sl_slider_admin',
 				array($this, 'sl_slider_settings_page'), //Method defined below
@@ -108,8 +121,8 @@ if ( !class_exists( 'SL_Slider' ) ) {
 			
 			add_submenu_page( //adds the submenu pages to the sidebar inside the menu item.
 				'sl_slider_admin',
-				'Manage Slides',
-				'Manage Slides',
+				esc_html__( 'Manage Slides', 'sl-slider'),
+				esc_html__( 'Manage Slides', 'sl-slider'),
 				'manage_options',
 				'edit.php?post_type=sl-slider',
 				null,
@@ -118,8 +131,8 @@ if ( !class_exists( 'SL_Slider' ) ) {
 			
 			add_submenu_page( //adds the submenu pages to the sidebar inside the menu item.
 				'sl_slider_admin',
-				'Add New Slide',
-				'Add New Slide',
+				esc_html__( 'Add New Slide', 'sl-slider'),
+				esc_html__( 'Add New Slide', 'sl-slider'),
 				'manage_options',
 				'post-new.php?post_type=sl-slider',
 				null,
@@ -136,7 +149,7 @@ if ( !class_exists( 'SL_Slider' ) ) {
 			}
 			//trigger to show 'settings saved' validation message 
 			if ( isset( $_GET['settings-updated'] ) ){
-				add_settings_error('sl_slider_options', 'sl_slider_message', 'Settings Saved Successfully', 'success' );
+				add_settings_error('sl_slider_options', 'sl_slider_message', esc_html__( 'Settings Saved Successfully', 'sl-slider'), 'success' );
 			}
 			settings_errors('sl_slider_options');
 			require( SL_SLIDER_PATH . 'views/settings-page.php' );	

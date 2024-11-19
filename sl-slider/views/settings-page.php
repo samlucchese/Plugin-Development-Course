@@ -13,8 +13,8 @@
 	<!-- //additional tab -->
 	<h2 class="nav-tab-wrapper">
 		<!-- Adds class to tab that gives it active state -->
-		<a href="?page=sl_slider_admin&tab=main_options" class="nav-tab <?=$active_tab == 'main_options' ? 'nav-tab-active' : ''; ?>">Main Options</a>
-		<a href="?page=sl_slider_admin&tab=additional_options" class="nav-tab <?=$active_tab == 'additional_options' ? 'nav-tab-active' : ''; ?>">Additional Options</a>
+		<a href="?page=sl_slider_admin&tab=main_options" class="nav-tab <?=$active_tab == 'main_options' ? 'nav-tab-active' : ''; ?>"><?php esc_html_e( 'Main Options', 'sl-slider' ); ?></a>
+		<a href="?page=sl_slider_admin&tab=additional_options" class="nav-tab <?=$active_tab == 'additional_options' ? 'nav-tab-active' : ''; ?>"><?php esc_html_e( 'Additional Options', 'sl-slider' ); ?></a>
 	</h2>
 	
 	<form action="options.php" method="post"> <!-- Create the form we see when we access the options page  -->
@@ -29,7 +29,7 @@
 				do_settings_sections( 'sl_slider_page2' );
 				
 			}
-			submit_button( 'Save Settings' );
+			submit_button( esc_html__('Save Settings', 'sl-slider') );
 		?>		
 	</form>
 </div>

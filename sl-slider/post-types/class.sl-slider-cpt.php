@@ -28,13 +28,13 @@ if ( !class_exists( 'SL_Slider_Post_Type' ) ){
 			register_post_type(
 				'sl-slider', 
 				array(
-					'label' => 'Slider',
-					'description' => 'Sliders',
+					'label' => esc_html__( 'Slider', 'sl-slider' ),
+					'description' => esc_html__( 'Sliders', 'sl-slider'),
 					'labels' => array(
-						'name' => 'Sliders',
-						'singular_name' => 'Slider',
-						'add_new' => 'Add New Slider',
-						'add_new_item' => 'Add New Slider',
+						'name' =>  esc_html__( 'Sliders', 'sl-slider'),
+						'singular_name' =>  esc_html__( 'Slider', 'sl-slider'),
+						'add_new' =>  esc_html__( 'Add New Slider', 'sl-slider'),
+						'add_new_item' =>  esc_html__( 'Add New Slider', 'sl-slider'),
 					),
 					'public' => true,
 					'supports' => array( 'title', 'editor', 'thumbnail'),
@@ -79,7 +79,7 @@ if ( !class_exists( 'SL_Slider_Post_Type' ) ){
 		public function add_meta_boxes(){
 			add_meta_box(
 				'sl_slider_meta_box',
-				'Link Options',
+				esc_html__( 'Link Options', 'sl-slider'), 
 				array( $this, 'add_inner_meta_boxes'),
 				'sl-slider',
 				'normal',
@@ -133,7 +133,7 @@ if ( !class_exists( 'SL_Slider_Post_Type' ) ){
 				// 3a. Updates the data entered to the metabox fields to the metadata database table. should appear in wp_postmeta table.
 				// -- add checks so that if it is empty some input is filled automatically
 				if (empty( $new_link_text )){
-					update_post_meta( $post_id, 'sl_slider_link_text', 'Add some text' );
+					update_post_meta( $post_id, 'sl_slider_link_text', esc_html__('Add some text', 'sl-slider') );
 				}else{
 					update_post_meta( $post_id, 'sl_slider_link_text', $new_link_text, $old_link_text );
 				}

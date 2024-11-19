@@ -23,21 +23,21 @@ if ( ! class_exists( 'SL_Slider_Settings' ) ) {
 			// Create page1 section below 
 			add_settings_section(
 				'sl_slider_main_section',
-				'How does it work?',
+				esc_html__( 'How does it work?', 'sl-slider'),
 				null,
 				'sl_slider_page1' //Creates a new slider settings page called sl_slider_page1
 			);
 			// create page2 section 
 			add_settings_section(
 				'sl_slider_second_section',
-				'Other Plugin Options',
+				esc_html__( 'Other Plugin Options', 'sl-slider'),
 				null,
 				'sl_slider_page2' //Creates a new slider settings page called sl_slider_page2
 			);
 			// Create page1 fields below
 			add_settings_field(
 				'sl_slider_shortcode',
-				'Shortcode',
+				esc_html__( 'Shortcode', 'sl-slider'),
 				array($this, 'sl_slider_shortcode_callback'),
 				'sl_slider_page1',
 				'sl_slider_main_section',
@@ -45,7 +45,7 @@ if ( ! class_exists( 'SL_Slider_Settings' ) ) {
 			// Create page2 fields below
 			add_settings_field(
 				'sl_slider_title',
-				'Slider Title',
+				esc_html__( 'Slider Title', 'sl-slider'),
 				array($this, 'sl_slider_title_callback'),
 				'sl_slider_page2',
 				'sl_slider_second_section',
@@ -69,7 +69,7 @@ if ( ! class_exists( 'SL_Slider_Settings' ) ) {
 			// Create field for slider style below 
 			add_settings_field(
 				'sl_slider_style',
-				'Slider Style',
+				esc_html__( 'Slider Style', 'sl-slider'),
 				array($this, 'sl_slider_style_callback'),
 				'sl_slider_page2',
 				'sl_slider_second_section',
@@ -86,7 +86,7 @@ if ( ! class_exists( 'SL_Slider_Settings' ) ) {
 		// Decides WHAT will be inside of add_settings_field(). Called in callback in add_settings_field().
 		public function sl_slider_shortcode_callback(){
 			?>
-			<span>Use the shortcode [sl_slider] to display the slider in any page/post/widget.</span>
+			<span><?php esc_html_e( 'Use the shortcode [sl_slider] to display the slider in any page/post/widget.' , 'sl-slider' );?></span>
 			<?php
 		}
 		
@@ -116,7 +116,7 @@ if ( ! class_exists( 'SL_Slider_Settings' ) ) {
 					} 
 				?>
 				/>
-				<label for="sl_slider_bullets">Whether to display bullets or not.</label>
+				<label for="sl_slider_bullets"><?php esc_html_e( 'Whether to display bullets or not.', 'sl-slider'); ?></label>
 			<?php 
 		}
 		
@@ -147,8 +147,8 @@ if ( ! class_exists( 'SL_Slider_Settings' ) ) {
 				switch($key){
 					case 'sl_slider_title':
 						if( empty( $value)){
-							add_settings_error('sl_slider_options', 'sl_slider_message', 'The title field cannot be left empty', 'error');
-							$value = 'Please type some text';
+							add_settings_error('sl_slider_options', 'sl_slider_message', esc_html__( 'The title field cannot be left empty', 'sl-slider'), 'error');
+							$value = esc_html__( 'Please type some text', 'sl-slider');
 						}
 						$new_input[$key] = sanitize_text_field( $value );
 					break;
