@@ -28,9 +28,11 @@ if ( !class_exists('SL_Slider_Shortcode') ) {
 			require( SL_SLIDER_PATH . 'views/sl-slider_shortcode.php' );
 			// Enqueue styles/scripts only when this plugin is called.
 			wp_enqueue_script( 'sl-slider-main-jq' );
-			wp_enqueue_script( 'sl-slider-options-js' );
+			// deleted below line when we added to functions.php
+			// wp_enqueue_script( 'sl-slider-options-js' );
 			wp_enqueue_style( 'sl-slider-main-css' );
 			wp_enqueue_style( 'sl-slider-frontend-css' );
+			sl_slider_options();
 			return ob_get_clean();
 		}
 	}

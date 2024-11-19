@@ -40,6 +40,9 @@ if ( !class_exists( 'SL_Slider' ) ) {
 		function __construct(){
 			$this->define_constants();
 			
+			// require once Functions.php file for script localization 
+			require_once( SL_SLIDER_PATH . 'functions/functions.php' );
+			
 			// Add an admin menu for plugin. Function down below. 
 			add_action( 'admin_menu', array( $this, 'add_menu') );
 			
@@ -143,8 +146,8 @@ if ( !class_exists( 'SL_Slider' ) ) {
 			// Flexslider main JQuery Register
 			wp_register_script('sl-slider-main-jq', SL_SLIDER_URL . 'vendor/flexslider/jquery.flexslider-min.js', array( 'jquery' ), SL_SLIDER_VERSION, true);
 			
-			// Flexslider options JS Register
-			wp_register_script('sl-slider-options-js', SL_SLIDER_URL . 'vendor/flexslider/flexslider.js', array( 'jquery' ), SL_SLIDER_VERSION, true);
+			// Register Flexslider JS file
+			// -- moved to /functions/functions.php 
 			
 			// Flexslider css Register
 			wp_register_style('sl-slider-main-css', SL_SLIDER_URL . 'vendor/flexslider/flexslider.css', array(), SL_SLIDER_VERSION, 'all');

@@ -57,7 +57,7 @@ if ( ! class_exists( 'SL_Slider_Settings' ) ) {
 			// Create Checkbox field for bullets below 
 			add_settings_field(
 				'sl_slider_bullets',
-				'Display Bullets?',
+				esc_html__( 'Display Bullets?', 'sl-slider' ),
 				array($this, 'sl_slider_bullets_callback'),
 				'sl_slider_page2',
 				'sl_slider_second_section',
@@ -156,6 +156,10 @@ if ( ! class_exists( 'SL_Slider_Settings' ) ) {
 						$new_input[$key] = sanitize_text_field( $value );
 					break;
 				}
+			}
+			// Ensure unset checkbox keys are saved as 0
+			if ( ! isset( $input['sl_slider_bullets'] ) ) {
+				$new_input['sl_slider_bullets'] = 0;
 			}
 			return $new_input;
 		}

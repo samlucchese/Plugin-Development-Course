@@ -1,7 +1,10 @@
 <!-- Call the title we have set in sl slider settings page. (Class_name::attribute['']) -->
 <!-- If the value of the the shortcode content is not empty, call it first. If it is empty, use the title set in the Plugin Options -->
 <h3><?php echo (!empty ( $content ) ) ? esc_html( $content ) : esc_html( SL_Slider_Settings::$options['sl_slider_title'] ); ?></h3>
-<div class="sl-slider flexslider ">
+
+<!-- If sl_slider_style field is already set and saved in the database [sl_slider_style found in class.sl-slider-settings.php, in add_settings_field() line70.], use that field. -->
+ <!-- Otherwise, fallback to 'style-1' --> 
+<div class="sl-slider flexslider <?php echo ( isset( SL_Slider_Settings::$options['sl_slider_style'] ) ) ? esc_attr(SL_Slider_Settings::$options['sl_slider_style']) : 'style-1' ;?> ">
 	<ul class="slides">
 		<?php 
 		
@@ -22,7 +25,14 @@
 				$button_url = get_post_meta( get_the_ID(), 'sl_slider_link_url', true );
 		?>
 		<li>
-			<?php the_post_thumbnail( 'full', array( 'class' => 'img-fluid' ) ); ?>
+			<?php 
+			if (has_post_thumbnail()){
+				the_post_thumbnail( 'full', array( 'class' => 'img-fluid' ) );
+			}else{
+				//placeholder image injection moved to /functions/functions.php in sl_slider_get_placeholder_image().
+				echo sl_slider_get_placeholder_image();
+			}
+			?>
 			<div class="sls-container">
 				<div class="slider-details-container">
 					<div class="wrapper">
