@@ -94,8 +94,24 @@ if ( !class_exists( 'SL_Slider' ) ) {
 		}
 		
 		public static function uninstall() {
-			
+			// Remove options
+			delete_option( 'sl_slider_options' );
+			// Check user preference
+			if ( get_option( 'sl_slider_options' )['sl_slider_delete_on_uninstall'] ) {
+				// Fetch and delete all posts of type 'sl-slider', including auto-drafts
+				$posts = get_posts(
+					array(
+						'post_type'   => 'sl-slider',
+						'numberposts' => -1,
+						'post_status' => array( 'any', 'auto-draft' )
+					)
+				);
+				foreach ( $posts as $post ) {
+					wp_delete_post( $post->ID, true );
+				}
+			}
 		}
+
 		
 		// Function to add Translation support to plugin. Call it above in __construct(){
 		public function load_textdomain(){

@@ -13,7 +13,8 @@ if ( ! class_exists( 'SL_Slider_Settings' ) ) {
 			// --- See this below line in action to call the SLIDER TITLE in sl-slider_shortcode.php
 			self::$options = get_option( 'sl_slider_options' );
 			
-			add_action( 'admin_init', array( $this, 'admin_init') ); // method below 
+			add_action( 'admin_init', array( $this, 'admin_init') ); // method below
+			
 		}
 		
 		public function admin_init(){
@@ -65,6 +66,22 @@ if ( ! class_exists( 'SL_Slider_Settings' ) ) {
 					'label_for' => 'sl_slider_bullets',
 				),
 			);
+			
+			
+			/*
+			// Create Checkbox field for uninstallation deletion
+			add_settings_field(
+				'sl_slider_delete_on_uninstall',
+				esc_html__( 'Delete On Uninstall?', 'sl-slider' ),
+				array($this, 'sl_slider_delete_on_uninstall_callback'),
+				'sl_slider_page2',
+				'sl_slider_second_section',
+				array(
+					'label_for' => 'sl_slider_delete_on_uninstall',
+				),
+			);
+			*/
+			
 			
 			// Create field for slider style below 
 			add_settings_field(
@@ -120,6 +137,27 @@ if ( ! class_exists( 'SL_Slider_Settings' ) ) {
 			<?php 
 		}
 		
+		/*
+		public function sl_slider_delete_on_uninstall_callback( $args ) {
+			?>
+			<input 
+				type="checkbox" 
+				name="sl_slider_options[sl_slider_delete_on_uninstall]" 
+				id="sl_slider_delete_on_uninstall" 
+				value="1" 
+				<?php 
+					if ( isset( self::$options['sl_slider_delete_on_uninstall'] ) ) {
+						checked( "1", self::$options['sl_slider_delete_on_uninstall'], true );
+					} 
+				?> 
+			/>
+			<label for="sl_slider_delete_on_uninstall">
+				<?php esc_html_e( 'Delete all data on uninstall?', 'sl-slider' ); ?>
+			</label>
+			<?php
+		}
+		*/
+		
 		// callback to display slider style fields 
 		public function sl_slider_style_callback( $args ){
 			?>
@@ -161,6 +199,11 @@ if ( ! class_exists( 'SL_Slider_Settings' ) ) {
 			if ( ! isset( $input['sl_slider_bullets'] ) ) {
 				$new_input['sl_slider_bullets'] = 0;
 			}
+			/*
+			if ( ! isset( $input['sl_slider_delete_on_uninstall'] ) ) {
+				$new_input['sl_slider_delete_on_uninstall'] = 0;
+			}
+			*/
 			return $new_input;
 		}
 		
