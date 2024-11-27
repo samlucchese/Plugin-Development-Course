@@ -50,4 +50,5 @@
 		wp_reset_postdata();
 	endif;
 ?>
+<!-- 20. Set up archive page/link for all testimonials -->
 <a href="<?php echo get_post_type_archive_link( 'sl-testimonials' ); ?>"><?php echo esc_html( 'See More Testimonials', 'sl-testimonials' ); ?></a>
