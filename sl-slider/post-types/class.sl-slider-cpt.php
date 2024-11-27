@@ -103,7 +103,10 @@ if ( !class_exists( 'SL_Slider_Post_Type' ) ){
 		
 		// 3. Save data entered to metaboxes
 		public function save_post( $post_id ){
-			
+			// Guard clauses for the current custom post type only. Ensures that metadata from other plugins does not bleed to each new slider post.
+			if (get_post_type($post_id) !== 'sl-slider') {
+				return;
+			}
 			// 4. Guard Clauses: protects the execution of the function 
 			// 4a. Check if the nonce set in the metabox html matches. More security measures.
 			if( isset( $_POST['sl_slider_nonce'] ) ) {

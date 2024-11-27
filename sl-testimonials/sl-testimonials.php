@@ -42,8 +42,13 @@ if( !class_exists( 'SL_Testimonials' ) ){
             // Define constants used througout the plugin
             $this->define_constants();           
             
+            // 1b. Instantiate new class
             require_once( SL_TESTIMONIALS_PATH . 'post-types/class.sl-testimonials-cpt.php' );
             $SLTestimonialsPostType = new SL_Testimonials_Post_Type();
+            
+            // 13. Instantiate new Widgets class
+            require_once( SL_TESTIMONIALS_PATH . 'widgets/class.sl-testimonials-widget.php' );
+            $SLTestimonialsWidget = new SL_Testimonials_Widget();
 
         }
 
@@ -68,6 +73,7 @@ if( !class_exists( 'SL_Testimonials' ) ){
          * Deactivate the plugin
          */
         public static function deactivate(){
+            // 4. unregister the cpt when the plugin is deactivated
             unregister_post_type( 'sl-testimonials' );
             flush_rewrite_rules();
         }
