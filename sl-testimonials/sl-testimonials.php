@@ -3,7 +3,7 @@
 /**
 * Plugin Name: SL Testimonials
 * Plugin URI: https://www.wordpress.org/sl-testimonials
-* Description: My plugin's description
+* Description: Creates a new Custom Post Type called 'Testimonials'. It also creates a custom template for the Testimonials Archive page and Testimonials Single Post. This plugin is a widget. 
 * Version: 1.0
 * Requires at least: 5.6
 * Requires PHP: 7.0
