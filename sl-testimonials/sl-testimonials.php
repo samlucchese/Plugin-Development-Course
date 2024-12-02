@@ -123,19 +123,16 @@ if( !class_exists( 'SL_Testimonials' ) ){
         public static function uninstall(){
             // Remove options from the database wp_options table named widget_sl-testimonials 
             delete_option( 'widget_sl-testimonials' );
-            // Check user preference
-            if ( get_option( 'sl_slider_options' )['sl_slider_delete_on_uninstall'] ) {
-                // Fetch and delete all posts of type 'sl-slider', including auto-drafts
-                $posts = get_posts(
-                    array(
-                        'post_type'   => 'sl-testimonials',
-                        'numberposts' => -1,
-                        'post_status' => array( 'any', 'auto-draft' )
-                    )
-                );
-                foreach ( $posts as $post ) {
-                    wp_delete_post( $post->ID, true );
-                }
+            // Fetch and delete all posts of type 'sl-slider', including auto-drafts
+            $posts = get_posts(
+                array(
+                    'post_type'   => 'sl-testimonials',
+                    'numberposts' => -1,
+                    'post_status' => array( 'any', 'auto-draft' )
+                )
+            );
+            foreach ( $posts as $post ) {
+                wp_delete_post( $post->ID, true );
             }
         }
         
