@@ -1,0 +1,74 @@
+# Blank WordPress Pot
+# Copyright 2014 ...
+# This file is distributed under the GNU General Public License v3 or later.
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: SL Testimonials v1.0.0\n"
+"Report-Msgid-Bugs-To: Translator Name <translations@example.com>\n"
+"POT-Creation-Date: 2024-12-02 12:32-0800\n"
+"PO-Revision-Date: \n"
+"Last-Translator: \n"
+"Language-Team: Your Team <translations@example.com>\n"
+"Language: es\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"X-Textdomain-Support: yesX-Generator: Poedit 1.6.4\n"
+"X-Poedit-SourceCharset: UTF-8\n"
+"X-Poedit-KeywordsList: __;_e;esc_html_e;esc_html_x:1,2c;esc_html__;esc_attr_e;esc_attr_x:1,2c;esc_attr__;_ex:1,2c;_nx:4c,1,2;_nx_noop:4c,1,2;_x:1,2c;_n:1,2;_n_noop:1,2;__ngettext:1,2;__ngettext_noop:1,2;_c,_nc:4c,1,2\n"
+"X-Poedit-Basepath: ..\n"
+"X-Poedit-Bookmarks: \n"
+"X-Generator: Poedit 3.5\n"
+"X-Poedit-SearchPath-0: .\n"
+
+#: post-types/class.sl-testimonials-cpt.php:27
+#: post-types/class.sl-testimonials-cpt.php:31
+msgid "Testimonial"
+msgstr "Testimonial"
+
+#: post-types/class.sl-testimonials-cpt.php:28
+#: post-types/class.sl-testimonials-cpt.php:30
+msgid "Testimonials"
+msgstr "Testimonios"
+
+#: post-types/class.sl-testimonials-cpt.php:56
+msgid "Testimonials Options"
+msgstr "Opciones de testimonios"
+
+#: views/sl-testimonials_metabox.php:14
+msgid "User occupation"
+msgstr "Ocupación del usuario"
+
+#: views/sl-testimonials_metabox.php:28
+msgid "User company"
+msgstr "Empresa usuaria"
+
+#: views/sl-testimonials_metabox.php:42
+msgid "User URL"
+msgstr "URL de usuario"
+
+#: widgets/class.sl-testimonials-widget.php:8
+msgid "Your most beloved testimonials"
+msgstr "Tus testimonios más queridos"
+
+#: widgets/class.sl-testimonials-widget.php:55
+msgid "Title"
+msgstr "Título"
+
+#: widgets/class.sl-testimonials-widget.php:66
+msgid "Number of Testimonials to Show"
+msgstr "Número de testimonios para mostrar"
+
+#: widgets/class.sl-testimonials-widget.php:87
+msgid "Display User Image?"
+msgstr "¿Mostrar imagen de usuario?"
+
+#: widgets/class.sl-testimonials-widget.php:98
+msgid "Display User Occupation?"
+msgstr "¿Mostrar ocupación del usuario?"
+
+#: widgets/class.sl-testimonials-widget.php:109
+msgid "Display User Company?"
+msgstr "¿Mostrar empresa de usuario?"

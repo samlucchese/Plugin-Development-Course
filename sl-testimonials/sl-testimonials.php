@@ -38,7 +38,10 @@ if( !class_exists( 'SL_Testimonials' ) ){
     class SL_Testimonials{
 
         public function __construct() {
-
+            
+            // 28. Translation support, function defined below.
+            $this->load_textdomain();
+            
             // Define constants used througout the plugin
             $this->define_constants();           
             
@@ -49,7 +52,11 @@ if( !class_exists( 'SL_Testimonials' ) ){
             // 13. Instantiate new Widgets class
             require_once( SL_TESTIMONIALS_PATH . 'widgets/class.sl-testimonials-widget.php' );
             $SLTestimonialsWidget = new SL_Testimonials_Widget();
-
+            
+            // 21. filter for archive template, method down below
+            add_filter( 'archive_template', array( $this, 'load_custom_archive_template') );
+            // 23. Repeat 21 for single template, method down below
+            add_filter( 'single_template', array( $this, 'load_custom_single_template') );
         }
 
          /**
@@ -59,7 +66,39 @@ if( !class_exists( 'SL_Testimonials' ) ){
             // Path/URL to root of this plugin, with trailing slash.
             define ( 'SL_TESTIMONIALS_PATH', plugin_dir_path( __FILE__ ) );
             define ( 'SL_TESTIMONIALS_URL', plugin_dir_url( __FILE__ ) );
-            define ( 'SL_TESTIMONIALS_VERSION', '1.0.0' );     
+            define ( 'SL_TESTIMONIALS_VERSION', '1.0.0' );  
+            
+            // 25. Define the override directory the plugin will search for in the theme regardless of which theme is active 
+            define( 'SL_TESTIMONIALS_OVERRIDE_PATH_DIR', get_stylesheet_directory() . '/sl-testimonials/' );   
+        }
+        
+        // 22. Method for archive template files 
+        public function load_custom_archive_template( $tpl ) { //tpl is template
+            if( current_theme_supports('sl-testimonials') ){
+                if ( is_post_type_archive( 'sl-testimonials' ) ) {
+                    $tpl = $this->get_template_part_location( 'archive-sl-testimonials.php' );
+                }
+            }
+            return $tpl;
+        }
+        // 24. Repeat 22 for single template, Method for single template files 
+        public function load_custom_single_template( $tpl ) { //tpl is template
+            if( current_theme_supports('sl-testimonials') ){
+                if ( is_singular( 'sl-testimonials' ) ) {
+                    $tpl = $this->get_template_part_location( 'single-sl-testimonials.php' );
+                }
+            }
+            return $tpl;
+        }
+        
+        // 26. Method for override function 
+        public function get_template_part_location( $file ){
+            if( file_exists( SL_TESTIMONIALS_OVERRIDE_PATH_DIR . $file ) ) {
+                $file = SL_TESTIMONIALS_OVERRIDE_PATH_DIR . $file;
+            }else{
+                $file = SL_TESTIMONIALS_PATH . 'views/templates/' . $file;
+            }
+            return $file;
         }
 
         /**
@@ -82,7 +121,31 @@ if( !class_exists( 'SL_Testimonials' ) ){
          * Uninstall the plugin
          */
         public static function uninstall(){
-
+            // Remove options from the database wp_options table named widget_sl-testimonials 
+            delete_option( 'widget_sl-testimonials' );
+            // Check user preference
+            if ( get_option( 'sl_slider_options' )['sl_slider_delete_on_uninstall'] ) {
+                // Fetch and delete all posts of type 'sl-slider', including auto-drafts
+                $posts = get_posts(
+                    array(
+                        'post_type'   => 'sl-testimonials',
+                        'numberposts' => -1,
+                        'post_status' => array( 'any', 'auto-draft' )
+                    )
+                );
+                foreach ( $posts as $post ) {
+                    wp_delete_post( $post->ID, true );
+                }
+            }
+        }
+        
+        // 29. Function to add Translation support to plugin. Call it above in __construct(){
+        public function load_textdomain(){
+            load_plugin_textdomain(
+                'sl-testimonials', //text domain, found at top of file commented out
+                false,
+                dirname( plugin_basename(__FILE__) ) . '/languages/'
+            );
         }
 
     }

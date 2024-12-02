@@ -53,7 +53,7 @@ if (!class_exists('SL_Testimonials_Post_Type')){
 		public function add_meta_boxes(){
 			add_meta_box(
 				'sl_testimonials_meta_box', // id 
-				esc_html('Testimonials Options', 'sl-testimonials' ), //title, and plugins text-domain 
+				esc_html__('Testimonials Options', 'sl-testimonials' ), //title, and plugins text-domain 
 				array( $this, 'add_inner_meta_boxes'), //callback function for metabox content. callback down below
 				'sl-testimonials',  //screen where custom meta box will appear. will only appear on an sl-testimonials post type
 				'normal',
