@@ -3,7 +3,7 @@
 /**
 * Plugin Name: SL Slider
 * Plugin URI: https://www.wordpress.org/sl-slider
-* Description: My plugin's description
+* Description: My plugin's description here
 * Version: 1.0
 * Requires at least: 5.6
 * Author: Sam Lucchese

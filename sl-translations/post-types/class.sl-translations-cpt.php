@@ -102,7 +102,7 @@ if ( ! class_exists( 'SL_Translations_Post_Type' ) ){
 			if (get_post_type($post_id) !== 'sl-translations') {
 				return;
 			}
-			// Guard Clauses: protects the execution of the function 
+			// 	---------------- Guard Clauses: protects the execution of the function  ----------------------
 			//  Check if the nonce set in the metabox html matches. More security measures.
 			if( isset( $_POST['sl_translations_nonce'] ) ) {
 				if( ! wp_verify_nonce( $_POST['sl_translations_nonce'], 'sl_translations_nonce' ) ) {
@@ -123,10 +123,17 @@ if ( ! class_exists( 'SL_Translations_Post_Type' ) ){
 					return;
 				}
 			}
+			// ----------------- End guard clauses ----------------------
 			
 			// keeps record of the post data in case the post is deleted and then restored
 			// 13. Create 2 variables, each one for each field in the metabox 
 			if( isset( $_POST['action']) && $_POST['action'] == 'editpost'){
+				
+				$transliteration = $_POST['sl_translations_transliteration'];
+				$video = $_POST['sl_translations_video_url'];
+				
+				global $wpdb;
+				
 				
 			}
 			

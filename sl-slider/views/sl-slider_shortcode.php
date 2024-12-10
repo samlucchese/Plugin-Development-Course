@@ -13,6 +13,7 @@
 			'post_status' => 'publish',
 			'post__in' => $id,
 			'orderby' => $orderby,
+			'showbullets' => true,
 		);
 		
 		$my_query = new WP_Query( $args );

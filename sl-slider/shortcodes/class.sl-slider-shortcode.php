@@ -23,6 +23,8 @@ if ( !class_exists('SL_Slider_Shortcode') ) {
 				$id = array_map( 'absint', explode(',', $id ) );
 			}
 			
+			
+			
 			// Create and call a file for our HTML Markup. (Shortcode's view file)
 			ob_start();
 			require( SL_SLIDER_PATH . 'views/sl-slider_shortcode.php' );

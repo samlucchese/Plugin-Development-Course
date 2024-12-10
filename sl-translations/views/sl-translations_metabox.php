@@ -34,7 +34,7 @@ $results = $wpdb->get_results( $query, ARRAY_A );
 			<label for="sl_translations_video_url"><?php esc_html_e( 'Video URL', 'sl-translations' ); ?></label>
 		</th>
 		<td>
-			<!-- 11. Get meta_values and attach to value attribute of my fields -->
+			<!-- 11. Get meta_values and attach to value attribute of my fields. Get values by var_dump()ing way above. -->
 			<input 
 				type="url" 
 				name="sl_translations_video_url" 
