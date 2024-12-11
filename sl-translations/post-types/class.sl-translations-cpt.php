@@ -1,27 +1,29 @@
 <?php 
-// 3. create the file for the plugin CPT
+// #3. create the file for the plugin CPT
 if ( ! class_exists( 'SL_Translations_Post_Type' ) ){
 	class SL_Translations_Post_Type{
 		public function __construct(){
 			
-			// 3a. create_post_type hook
+			// #3a. create_post_type hook
 			add_action( 'init', array( $this, 'create_post_type' ) );
 			
-			// 5a. create_taxonomy hook
+			// #5a. create_taxonomy hook
 			add_action( 'init', array( $this, 'create_taxonomy' ) );
 			
-			// 7a. register_metadata_table hook
+			// #7a. register_metadata_table hook
 			add_action( 'init', array( $this, 'register_metadata_table' ) );
 			
-			// 8a. add_meta_boxes hook
+			// #8a. add_meta_boxes hook
 			add_action( 'add_meta_boxes', array($this, 'add_meta_boxes') );
 			
-			// 12a. wp_insert_post hook with save_post callback. save_post callback method down below.
+			// #12a. wp_insert_post hook with save_post callback. save_post callback method down below.
 			add_action( 'wp_insert_post', array($this, 'save_post'), 10, 2 );
 			
+			# 19a. delete_post hook 
+			add_action( 'delete_post', array( $this , 'delete_post' ));
 		}
 		
-		// 3b. create_post_type method
+		// #3b. create_post_type method
 		public function create_post_type(){
 			//taken from a previous plugin create_post_type() function 
 			register_post_type(
@@ -55,7 +57,7 @@ if ( ! class_exists( 'SL_Translations_Post_Type' ) ){
 			);
 		}
 		
-		// 5b. create_taxonomy method
+		// #5b. create_taxonomy method
 		public function create_taxonomy(){
 			register_taxonomy(
 				'singers',
@@ -74,13 +76,13 @@ if ( ! class_exists( 'SL_Translations_Post_Type' ) ){
 			);
 		} 
 		
-		// 7b. register_metadata_table method
+		// #7b. register_metadata_table method
 		public function register_metadata_table(){
 			global $wpdb; 
 			$wpdb->translationmeta = $wpdb->prefix . 'translationmeta'; // saves time by shortening the name for the database
 		}
 		
-		// 8b. add_meta_boxes Method
+		// #8b. add_meta_boxes Method
 		public function add_meta_boxes(){
 			add_meta_box(
 				'sl_translations_meta_box', // id 
@@ -91,13 +93,14 @@ if ( ! class_exists( 'SL_Translations_Post_Type' ) ){
 				'high'				
 			);
 		}
-		// 7. add_inner_meta_boxes method
+		// #7. add_inner_meta_boxes method
 		public function add_inner_meta_boxes( $post ){
 			require_once( SL_TRANSLATIONS_PATH . 'views/sl-translations_metabox.php' );
 		}
 		
-		// 12b. save_post callback method for wp_insert_post() hook
-		public function save_post($post_id, $post){
+		// #12b. save_post callback method for wp_insert_post() hook
+		// --- static in the method allos us to use this save_post method outside of this file, for example, in the /views/sl-translations_shortcode.php file 
+		public static function save_post($post_id, $post){
 			// Guard clauses for the current custom post type only. Ensures that metadata from other plugins does not bleed to each new Translation post.
 			if (get_post_type($post_id) !== 'sl-translations') {
 				return;
@@ -126,17 +129,103 @@ if ( ! class_exists( 'SL_Translations_Post_Type' ) ){
 			// ----------------- End guard clauses ----------------------
 			
 			// keeps record of the post data in case the post is deleted and then restored
-			// 13. Create 2 variables, each one for each field in the metabox 
+			// #13. Create 2 variables, each one for each field in the metabox 
 			if( isset( $_POST['action']) && $_POST['action'] == 'editpost'){
 				
-				$transliteration = $_POST['sl_translations_transliteration'];
-				$video = $_POST['sl_translations_video_url'];
+				$transliteration = sanitize_text_field( $_POST['sl_translations_transliteration'] );
+				$video = esc_url_raw( $_POST['sl_translations_video_url'] );
 				
 				global $wpdb;
-				
-				
+				// #17. Wrap validation + insert method in the 'save' if statement 
+				if( $_POST['sl_translations_action'] == 'save') {
+					// before insert method we need some validation  
+					// post status: make sure the post is published + exists (using get_var)
+					if( get_post_type( $post ) == 'sl-translations' && 
+						$post->post_ststus != 'trash' && 
+						$post->post_status != 'auto-draft' && 
+						$post->post_status != 'draft' && 
+						$wpdb->get_var(
+							$wpdb->prepare(
+								"SELECT translation_id
+								FROM $wpdb->translationmeta
+								WHERE translation_id = %d",
+								$post_id
+							)) == null
+					){
+						// #15. insert method for transliteration field
+						$wpdb->insert(
+							$wpdb->translationmeta, //table name
+							array(
+								'translation_id' => $post_id, 
+								'meta_key' => 'sl_translations_transliteration',
+								'meta_value' => $transliteration
+							), //array containing the data we want to pass to the table (in key and value format)
+							array(
+								'%d', '%s', '%s'
+							) // array with the format of all fields we want to pass to the table 
+						);
+						// #15. insert method for video_url field 
+						$wpdb->insert(
+							$wpdb->translationmeta, //table name
+							array(
+								'translation_id' => $post_id, 
+								'meta_key' => 'sl_translations_video_url',
+								'meta_value' => $video
+							), //array containing the data we want to pass to the table (in key and value format)
+							array(
+								'%d', '%s', '%s'
+							) // array with the format of all fields we want to pass to the table 
+						);
+					}
+				} else{
+					if( get_post_type( $post ) == 'sl-translations' ){
+						// 18. Add $wpdb->update() method in the else statement for transliteration
+						$wpdb->update(
+							$wpdb->translationmeta, //table name
+							array(
+								'meta_value' => $transliteration
+							), // VALUE array with the columns we want to update with the new values 
+							array(
+								'translation_id' => $post_id, 
+								'meta_key' => 'sl_translations_transliteration',
+							), // WHERE array equivalent to the WHERE command in an SQL statement
+							// two more optional parameters,
+							array( '%s' ), // an array to format the VALUEs
+							array( '%d', '%s' ), // an array to format data in the WHERE array 
+						);
+						// 18. Add $wpdb->update() method in the else statement for video_url 
+						$wpdb->update(
+							$wpdb->translationmeta, //table name
+							array(
+								'meta_value' => $video
+							), // VALUE array with the columns we want to update with the new values 
+							array(
+								'translation_id' => $post_id, 
+								'meta_key' => 'sl_translations_video_url',
+							), // WHERE array equivalent to the WHERE command in an SQL statement
+							// two more optional parameters,
+							array( '%s' ), // an array to format the VALUEs
+							array( '%d', '%s' ), // an array to format data in the WHERE array 
+						);
+					}
+				}
 			}
 			
+		}
+		# 19b. delete_post method
+		public function delete_post( $post_id ){
+			if ( ! current_user_can('delete_posts') ) {
+				return;
+			}
+			if( get_post_type( $post_id ) == 'sl-translations' ){
+				global $wpdb;
+				// $wpdb->delete() is similar to $wpdb->update()
+				$wpdb->delete(
+					$wpdb->translationmeta, // table name
+					array( 'translation_id' => $post_id), // Array with value from the WHERE clause
+					array( '%d' )//array with the format of the fields in the WHERE clause
+				);
+			}
 		}
 	}
 }

@@ -40,9 +40,16 @@ if( !class_exists( 'SL_Translations' )){
 		public function __construct(){
 			$this->define_constants(); 
     
-            // 4. Require the cpt file + instantiate the new class in our main file
+            // #4. Require the cpt file + instantiate the new class in our main file
             require_once( SL_TRANSLATIONS_PATH . 'post-types/class.sl-translations-cpt.php' );
             $SLTranslationsPostType = new SL_Translations_Post_Type();
+            
+            // #20. Require the /shortcodes/class.sl-translations-shortcode.php file + instantiate new class from /views/sl-translations-shortcode.php 
+            require_once( SL_TRANSLATIONS_PATH . 'shortcodes/class.sl-translations-shortcode.php' );
+            $SLTranslationsShortcode = new SL_Translations_Shortcode();
+            
+            // #30. Call the hook to enqueue_scripts for our register_scripts method 
+            add_action( 'wp_enqueue_scripts', array($this, 'register_scripts'), 999 );
 		}
         
 		public function define_constants(){
@@ -58,7 +65,7 @@ if( !class_exists( 'SL_Translations' )){
         public static function activate(){
             update_option('rewrite_rules', '' );
             
-            // 1. Perform a check during plugin activation, if the plugin version info exists, then the plugin is already installed and the table already exists. Otherwise run a query that will create the table in the database and then add a record to the wp_options table with the plugin information. 
+            // #1. Perform a check during plugin activation, if the plugin version info exists, then the plugin is already installed and the table already exists. Otherwise run a query that will create the table in the database and then add a record to the wp_options table with the plugin information. 
             global $wpdb;
             // $table_name = "wp_"; // default prefix, although we might want to change it. 
             $table_name = $wpdb->prefix . "translationmeta"; // in quotes is the new table name. Table will be ' wp_translationmeta '
@@ -88,7 +95,7 @@ if( !class_exists( 'SL_Translations' )){
                 
             }
             
-            // 2. Use $wpdb to see if the 2 pages(submit-translation + edit-translation) exist. If not, create them. 
+            // #2. Use $wpdb to see if the 2 pages(submit-translation + edit-translation) exist. If not, create them. 
             if ( $wpdb->get_row( "SELECT post_name FROM {$wpdb->prefix}posts WHERE post_name = 'submit-translation'" ) === null ){
                 // If empty, insert a post
                 
@@ -130,7 +137,7 @@ if( !class_exists( 'SL_Translations' )){
          */
         public static function deactivate(){
             flush_rewrite_rules();
-            // 6. Unregister post type in deactivate() function
+            // #6. Unregister post type in deactivate() function
             unregister_post_type( 'sl-translations' );
         }        
         
@@ -140,6 +147,16 @@ if( !class_exists( 'SL_Translations' )){
         public static function uninstall(){
             
         }       
+        
+        // #28. and #29. 
+        // #28. Create register_scripts() method and the /assets/jquery.custom.js file, register custom script.
+        // #29. Download jquery-validation.zip file from https://github.com/jquery-validation/jquery-validation/releases/tag/1.19.5, unzip, copy jquery.validate.min.js file and paste to /assets/. Register validation script 
+        public function register_scripts(){
+            // register custom script
+            wp_register_script( 'custom_js', SL_TRANSLATIONS_URL . 'assets/jquery.custom.js', array( 'jquery' ), SL_TRANSLATIONS_VERSION, true);
+            // register validation script
+            wp_register_script( 'validate_js', SL_TRANSLATIONS_URL . 'assets/jquery.validate.min.js', array( 'jquery' ), SL_TRANSLATIONS_VERSION, true);
+        }
         
     }
 }
