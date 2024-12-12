@@ -39,7 +39,10 @@ if( !class_exists( 'SL_Translations' )){
         
 		public function __construct(){
 			$this->define_constants(); 
-    
+            
+            //  #34. Create /functions/functions.php and require this file 
+            require_once( SL_TRANSLATIONS_PATH . 'functions/functions.php' );
+            
             // #4. Require the cpt file + instantiate the new class in our main file
             require_once( SL_TRANSLATIONS_PATH . 'post-types/class.sl-translations-cpt.php' );
             $SLTranslationsPostType = new SL_Translations_Post_Type();

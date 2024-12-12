@@ -1,4 +1,10 @@
-<!-- HTML form markup for submitting a new translation. Copied from initial-code.php -->
+<!-- #36. Test user registration by calling slt_register_user()  -->
+<?php  
+if ( ! is_user_logged_in() ) {
+	slt_register_user();
+	return;
+}
+?>
 
 
 <!-- #24. Validate the form submission. -->
