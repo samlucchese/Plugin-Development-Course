@@ -134,6 +134,34 @@ if( isset( $_POST['submitted'])){
 
 <!-- start of the table output -->
 <div class="translations-list">
+	
+	<?php 
+	
+	// #42. Join post data from 2 different tables, wp_posts table and wp_translationmeta metadata table with SQL join statement
+	// -----------------------------------------------
+	global $current_user;
+	global $wpdb;
+	
+	// $q is the variable that receives the SQL statement. we use wpdb->prepare() because there is going to be a dynamic value ---- (get post info from translation list)
+	$q = $wpdb->prepare(
+		"SELECT ID, post_author, post_date, post_title, post_status, meta_key, meta_value
+		FROM $wpdb->posts AS p
+		INNER JOIN $wpdb->translationmeta AS tm
+		ON p.ID = tm.translation_id
+		WHERE p.post_author = %d
+		AND tm.meta_key = 'sl_translations_transliteration'
+		AND p.post_status IN ('publish', 'pending')
+		ORDER BY p.post_date DESC",
+		$current_user->ID
+	);
+	$results = $wpdb->get_results( $q );
+	// var_dump( $results );
+	// end #42. -----------------------------------------------
+	
+	// #43. Feed the translation list with the correct values. 
+	// #43a. Only show the table if the user has contributed to the site. 
+	if ( $wpdb->num_rows > 1 ) : 
+	?>
 			<table>
 				<caption><?php esc_html_e( 'Your Translations', 'sl-translations' ); ?></caption>
 				<thead>
@@ -146,15 +174,35 @@ if( isset( $_POST['submitted'])){
 						<th><?php esc_html_e( 'Status', 'sl-translations' ); ?></th>
 					</tr>
 				</thead>  
-				<tbody>  
+				<tbody> 
+					<!-- #43b. foreach loop to loop through each item in the $results array -->
+				 <?php foreach ($results as $result): ?>
 					<tr>
-						<td>Date</td>
-						<td>Title</td>
-						<td>Transliteraton</td>
-						<td>Edit</td>
-						<td>Delete</td>
-						<td>Status</td>
+						<td><?php echo esc_html( date( 'M/d/Y', strtotime( $result->post_date ) ) );?></td> <!-- post date -->
+						<td><?php echo esc_html( $result->post_title ); ?></td> <!-- post title --> 
+						<td><?php echo $result->meta_value == 'Yes' ? esc_html__( 'Yes', 'sl-translations' ) : esc_html__( 'No', 'sl-translations' ); ?></td> <!-- post transliteration? -->
+						<!-- #44. Edit Post table item -->
+						<?php $edit_post = add_query_arg( 'post', $result->ID, home_url( '/edit-translation' ) ); ?> 
+						<td><a href="<?php echo esc_url( $edit_post ); ?>" ><?php esc_html_e( 'Edit', 'sl-translations' ); ?></a></td> <!-- post edit? -->
+						<td>
+							<a onclick="return confirm( 'Are you sure you want to delete post: <?php echo $result->post_title ?>?' )" href="<?php echo get_delete_post_link( $result->ID, '', true ); ?>"><?php esc_html_e( 'Delete', 'sl-translations' ); ?></a>
+						</td> <!-- post delete? -->
+						<td>
+						<?php 
+							switch( $result->post_status ){
+								case 'publish':
+									$result->post_status = __( 'Published', 'sl-translations' );
+								break;
+								default: 
+									$result->post_status = __( 'Pending', 'sl-translations' );
+								break;
+							}
+							echo esc_html( $result->post_status );
+						?>
+						</td> <!-- post status, can also use a switch statement instead of a ternary check like in transliteration -->
 					</tr>
+				<?php endforeach; ?>
 			</tbody>
 		</table>
+	<?php endif; ?>
 </div>

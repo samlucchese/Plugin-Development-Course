@@ -51,6 +51,10 @@ if( !class_exists( 'SL_Translations' )){
             require_once( SL_TRANSLATIONS_PATH . 'shortcodes/class.sl-translations-shortcode.php' );
             $SLTranslationsShortcode = new SL_Translations_Shortcode();
             
+            // #45. EDIT SHORTCODE – Require the /shortcodes/class.sl-translations-edit-shortcode.php file + instantiate new class from /views/sl-translations-edit-shortcode.php 
+            require_once( SL_TRANSLATIONS_PATH . 'shortcodes/class.sl-translations-edit-shortcode.php' );
+            $SLTranslationsEditShortcode = new SL_Translations_Edit_Shortcode();
+            
             // #30. Call the hook to enqueue_scripts for our register_scripts method 
             add_action( 'wp_enqueue_scripts', array($this, 'register_scripts'), 999 );
 		}
