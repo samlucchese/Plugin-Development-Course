@@ -119,8 +119,8 @@ var_dump( $results );
 
 		<br />
 		<?php 
+			// #48c. Populates the editor field
 			wp_editor($results[0]['post_content'], 'sl_translations_content', array( 'wpautop' => true, 'media_buttons' => false ) );
-		
 		?>
 		</br />
 		
