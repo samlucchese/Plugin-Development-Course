@@ -4,6 +4,7 @@ if ( ! class_exists( 'SL_Translations_Post_Type' ) ){
 	class SL_Translations_Post_Type{
 		public function __construct(){
 			
+			
 			// #3a. create_post_type hook
 			add_action( 'init', array( $this, 'create_post_type' ) );
 			
@@ -19,8 +20,11 @@ if ( ! class_exists( 'SL_Translations_Post_Type' ) ){
 			// #12a. wp_insert_post hook with save_post callback. save_post callback method down below.
 			add_action( 'wp_insert_post', array($this, 'save_post'), 10, 2 );
 			
-			# 19a. delete_post hook 
+			// # 19a. delete_post hook 
 			add_action( 'delete_post', array( $this , 'delete_post' ));
+			
+			// #54a. pre_get_posts/add_cpt_author hook, method down below.
+			add_action( 'pre_get_posts', array( $this, 'add_cpt_author' ) );
 		}
 		
 		// #3b. create_post_type method
@@ -75,6 +79,12 @@ if ( ! class_exists( 'SL_Translations_Post_Type' ) ){
 				)
 			);
 		} 
+		// #54b. pre_get_posts/add_cpt_author method 
+		public function add_cpt_author( $query ){
+			if ( !is_admin() && $query->is_author() && $query->is_main_query() ){
+				$query->set( 'post_type', array( 'sl-translations', 'post' ) );
+			}
+		}
 		
 		// #7b. register_metadata_table method
 		public function register_metadata_table(){

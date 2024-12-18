@@ -65,7 +65,7 @@ function slt_register_user(){
 				'last_name' => $lastname,
 				'user_email' => $useremail,
 				'user_pass' => $password,
-				'role' => 'contributer'
+				'role' => 'author'
 			);
 			$user = wp_insert_user( $user_data );
 			wp_login_form();

@@ -38,6 +38,10 @@ if( !class_exists( 'SL_Translations' )){
 	class SL_Translations{
         
 		public function __construct(){
+            
+            // #55a. Add load_textdomain() constructor and 55b. function below
+            $this->load_textdomain();
+            
 			$this->define_constants(); 
             
             //  #34. Create /functions/functions.php and require this file 
@@ -57,6 +61,9 @@ if( !class_exists( 'SL_Translations' )){
             
             // #30. Call the hook to enqueue_scripts for our register_scripts method 
             add_action( 'wp_enqueue_scripts', array($this, 'register_scripts'), 999 );
+            
+            // #51. Overwrite the themes single.php file
+            add_filter( 'single_template', array( $this, 'load_custom_single_template' ) );
 		}
         
 		public function define_constants(){
@@ -65,6 +72,16 @@ if( !class_exists( 'SL_Translations' )){
             define ( 'SL_TRANSLATIONS_URL', plugin_dir_url( __FILE__ ) );
             define ( 'SL_TRANSLATIONS_VERSION', '1.0.0' );
 		}
+        
+        // 55b. Function to add Translation support to plugin. Called above in __construct(){
+        public function load_textdomain(){
+            load_plugin_textdomain(
+                'sl-translations', //text domain, found at top of file commented out
+                false,
+                dirname( plugin_basename(__FILE__) ) . '/languages/'
+            );
+        }
+        
         
         /**
          * Activate the plugin
@@ -163,6 +180,19 @@ if( !class_exists( 'SL_Translations' )){
             wp_register_script( 'custom_js', SL_TRANSLATIONS_URL . 'assets/jquery.custom.js', array( 'jquery' ), SL_TRANSLATIONS_VERSION, true);
             // register validation script
             wp_register_script( 'validate_js', SL_TRANSLATIONS_URL . 'assets/jquery.validate.min.js', array( 'jquery' ), SL_TRANSLATIONS_VERSION, true);
+            
+            // #53. Enqueue styles css file for our new single translation template file  
+            if ( is_singular('sl-translations')){
+                wp_enqueue_style('sl-translations', SL_TRANSLATIONS_URL . 'assets/style.css', array(), SL_TRANSLATIONS_VERSION, 'all');
+            }
+        }
+        
+        // #52. Create custom template method down here, create new template file in /views/templates/
+        public function load_custom_single_template( $tpl ) {
+            if ( is_singular( 'sl-translations' ) ){
+                $tpl = SL_TRANSLATIONS_PATH . 'views/templates/single-sl-translations.php';
+            }
+            return $tpl;
         }
         
     }

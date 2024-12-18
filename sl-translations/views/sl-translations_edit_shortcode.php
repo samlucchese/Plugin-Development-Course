@@ -1,8 +1,8 @@
-<!-- #45b. Create /views/sl-translations_edit_shortcode.php. Copied code from /views/sl-translations_shortcode -->
-<!-- See original code comments in /views/sl-translations_shortcode.php -->
-
-
 <?php  
+//  #45b. Create /views/sl-translations_edit_shortcode.php. Copied code from /views/sl-translations_shortcode
+//  See original code comments in /views/sl-translations_shortcode.php 
+
+
 if ( ! is_user_logged_in() ) {
 	slt_register_user();
 	return;
@@ -87,10 +87,12 @@ $q = $wpdb->prepare(
 );
 // Adding another parameter to the get_results() function, ARRAY_A. We want the output of get_results() to be an array.
 $results = $wpdb->get_results( $q, ARRAY_A );
-var_dump( $results );
-?>
+// var_dump($results);
 
 
+
+// #49. Prevent lower role users from editing admin posts
+if( current_user_can( 'edit_post', $_GET['post'] ) ): ?>
 
 <div class="sl-translations">
 	<form action="" method="POST" id="translations-form">
@@ -127,11 +129,13 @@ var_dump( $results );
 		<fieldset id="additional-fields">
 			<label for="sl_translations_transliteration"><?php esc_html_e( 'Has transliteration?', 'sl-translations' ); ?></label>
 			<select name="sl_translations_transliteration" id="sl_translations_transliteration">
-				<option value="Yes" <?php if (isset($transliteration)) selected( $transliteration, "Yes" ); ?>><?php esc_html_e( 'Yes', 'sl-translations' ); ?></option>
-				<option value="No" <?php if (isset($transliteration)) selected( $transliteration, "No" ); ?>><?php esc_html_e( 'No', 'sl-translations' ); ?></option>
+				<!-- // #48d. Populates the transliteration select metabox field -->
+				<option value="Yes" <?php selected( $results[0]['meta_value'], "Yes" ); ?>><?php esc_html_e( 'Yes', 'sl-translations' ); ?></option>
+				<option value="No" <?php  selected( $results[0]['meta_value'], "No" ); ?>><?php esc_html_e( 'No', 'sl-translations' ); ?></option>
 			</select>
 			<label for="sl_translations_video_url"><?php esc_html_e( 'Video URL', 'sl-translations' ); ?></label>
-			<input type="url" name="sl_translations_video_url" id="sl_translations_video_url" value="<?php if( isset( $video ) ) echo $video; ?>" />
+			<!-- // #48e. Populates the transliteration select metabox field -->
+			<input type="url" name="sl_translations_video_url" id="sl_translations_video_url" value="<?php echo $results[1]['meta_value']; ?>" />
 		</fieldset>
 		<br />
 		<!-- value="saved" below is changed to value="update" -->
@@ -141,5 +145,18 @@ var_dump( $results );
 		<input type="hidden" name="submitted" id="submitted" value="true" />
 		<input type="submit" name="submit_form" value="<?php esc_attr_e( 'Submit', 'sl-translations' ); ?>" />
 	</form>
+	<br>
+	<!-- // back to all translations button  -->
+	<a href="<?php echo esc_url( home_url('/submit-translation' ) ); ?>"><?php esc_html_e( 'Back to Translations List', 'sl-translations' ); ?></a>
 </div>
 
+<?php endif; ?>
+<!-- #end 49. ENDIF Prevent lower role users from editing admin posts -->
+
+
+<!-- #50a. Prevent form resubmission on page refresh -->
+<script>
+	if ( window.history.replaceState ) {
+		window.history.replaceState( null, null, window.location.href );
+	}
+</script>

@@ -1,5 +1,5 @@
-<!-- #36. Test user registration by calling slt_register_user()  -->
 <?php  
+// #36. Test user registration by calling slt_register_user() 
 if ( ! is_user_logged_in() ) {
 	slt_register_user();
 	return;
@@ -206,3 +206,9 @@ if( isset( $_POST['submitted'])){
 		</table>
 	<?php endif; ?>
 </div>
+<!-- #50b. Prevent form resubmission on page refresh -->
+<script>
+	if ( window.history.replaceState ) {
+		window.history.replaceState( null, null, window.location.href );
+	}
+</script>

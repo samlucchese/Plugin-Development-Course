@@ -1,6 +1,5 @@
-<!-- #45a. Create shortcode file for new EDIT shortcode (/shortcodes/class.sl-translations-edit-shortcode.php) -->
-
 <?php 
+//  #45a. Create shortcode file for new EDIT shortcode (/shortcodes/class.sl-translations-edit-shortcode.php)
 if ( !class_exists('SL_Translations_Edit_Shortcode') ) {
 	class SL_Translations_Edit_Shortcode{
 		function __construct(){
