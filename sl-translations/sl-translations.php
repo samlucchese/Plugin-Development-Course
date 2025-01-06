@@ -168,8 +168,33 @@ if( !class_exists( 'SL_Translations' )){
         /**
          * Uninstall the plugin
          */
+         // #57. Create the uninstall() method 
         public static function uninstall(){
+            delete_option( 'sl_translation_db_version' ); // delete the plugin version
             
+            // #57a.using $wpdb to delete the sl-translations posts
+            global $wpdb;
+            
+            $wpdb->query(
+                "DELETE FROM $wpdb->posts
+                WHERE post_type = 'sl-translations'"
+            );
+            // #57b. using $wpdb to delete the pages
+            $wpdb->query(
+                "DELETE FROM $wpdb->posts
+                WHERE post_type = 'page'
+                AND post_name IN( 'submit-translation', 'edit-translation' )"
+            );
+            
+            $wpdb->query( $wpdb->prepare(
+                "DROP TABLE IF EXISTS %s",
+                $wpdb->prefix . 'translationmeta'
+            ));
+            
+            /*
+            ***** if the prepare() method above is breaking, use the below line
+            ***** $wpdb->query( "DROP TABLE IF EXISTS {$wpdb->prefix}translationmeta" );
+            */
         }       
         
         // #28. and #29. 
